@@ -1,5 +1,6 @@
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.message.MessageBuilder;
 
 import java.util.*;
 
@@ -9,17 +10,17 @@ public class FeudManager {
     public ArrayList<String> TeamAMembers;
     public ArrayList<String> TeamBMembers;
     private final DiscordApi api;
-    public boolean gameStarted;
+    private boolean gameStarted;
 
-    public FeudManager(String token, DiscordApi api){
+    public FeudManager(String token, DiscordApi api) {
         this.token = token;
         this.api = api;
         this.TeamAMembers = new ArrayList<String>();
         this.TeamBMembers = new ArrayList<String>();
     }
 
-    public int addTeamMember(String member, String team) throws InputMismatchException{
-        switch(team.toLowerCase(Locale.ROOT)) {
+    public int addTeamMember(String member, String team) throws InputMismatchException {
+        switch (team.toLowerCase(Locale.ROOT)) {
             case "a":
                 TeamAMembers.add(member);
                 break;
@@ -33,7 +34,7 @@ public class FeudManager {
     }
 
     public void removeTeamMember(String member, String team) throws InputMismatchException, NullPointerException {
-        switch(team.toLowerCase(Locale.ROOT)) {
+        switch (team.toLowerCase(Locale.ROOT)) {
             case "a":
                 TeamAMembers.remove(member);
                 break;
@@ -46,20 +47,50 @@ public class FeudManager {
 
     }
 
-    public ArrayList<String> getTeamMembers(String team){
-         switch(team){
-             case "a":
-                 return TeamAMembers;
-             case "b":
-                 return TeamBMembers;
-             default:
-                 throw new InputMismatchException("Invalid team label. Must only be 'A' or 'B'.");
-         }
+    public ArrayList<String> getTeamMembers(String team) {
+        switch (team) {
+            case "a":
+                return TeamAMembers;
+            case "b":
+                return TeamBMembers;
+            default:
+                throw new InputMismatchException("Invalid team label. Must only be 'A' or 'B'.");
+        }
     }
 
-    public void startGame(){
-        gameStarted = true;
-        Set<ServerChannel> servers = api.getServerChannels();
-        System.out.println("List of server channels:\n" + Arrays.toString(servers.toArray()));
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
+
+    /**
+     * Starts a new game (if not already active). Returns 0 if game was started successfully, 1 if not.*
+     */
+    public int startGame() {
+        if(!gameStarted){
+            gameStarted = true;
+            return 0;
+        }
+        else
+            return 1;
+    }
+
+    /**
+     * * Ends the current game.
+     *
+     * @return 1 if the game has not already been started. 0 if the game has already been started (successfully ended).
+     */
+    public int endGame() {
+        if (!gameStarted)
+            return 1;
+
+        else {
+            gameStarted = false;
+            return 0;
+        }
+
     }
 }

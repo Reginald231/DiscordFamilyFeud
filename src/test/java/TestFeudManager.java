@@ -103,6 +103,32 @@ public class TestFeudManager {
         DiscordApi api = new DiscordApiBuilder().setToken(token).addIntents(Intent.MESSAGE_CONTENT).login().join();
         FeudManager fm = new FeudManager(token, api);
         fm.startGame();
-        assertTrue(fm.gameStarted);
+        assertTrue(fm.isGameStarted());
+    }
+
+    @Test
+    void testStartGameWhileGameActive() throws IOException {
+        String token = DiscordFamilyFeud.getToken();
+        DiscordApi api = new DiscordApiBuilder().setToken(token).addIntents(Intent.MESSAGE_CONTENT).login().join();
+        FeudManager fm = new FeudManager(token, api);
+        fm.setGameStarted(true);
+        assertEquals(1, fm.startGame());
+    }
+
+    @Test
+    void testEndGame() throws IOException{
+        String token = DiscordFamilyFeud.getToken();
+        DiscordApi api = new DiscordApiBuilder().setToken(token).addIntents(Intent.MESSAGE_CONTENT).login().join();
+        FeudManager fm = new FeudManager(token, api);
+        fm.setGameStarted(true);
+        assertEquals(0, fm.endGame());
+    }
+
+    @Test
+    void testEndGameWithNoGameActive() throws IOException{
+        String token = DiscordFamilyFeud.getToken();
+        DiscordApi api = new DiscordApiBuilder().setToken(token).addIntents(Intent.MESSAGE_CONTENT).login().join();
+        FeudManager fm = new FeudManager(token, api);
+        assertEquals(1, fm.endGame());
     }
 }

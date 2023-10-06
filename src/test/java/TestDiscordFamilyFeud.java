@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 
 public class TestDiscordFamilyFeud{
 
-    // @Test
-    // void testBotStartup(){
-    //     void 
-    // }
-
     @Test
     void testGetTokenNotNull(){
 
@@ -24,5 +19,17 @@ public class TestDiscordFamilyFeud{
         }
         
     }
+
+    @Test
+    void testStartUp(){
+        DiscordFamilyFeud.main(new String[0]);
+    }
+
+//    @Test
+//    void testCreateInviteEmbed(){
+//        String invite = DiscordFamilyFeud.getInvite();
+//        assertNotNull(DiscordFamilyFeud.createInviteEmbed(invite));
+//
+//    }
 
 }
