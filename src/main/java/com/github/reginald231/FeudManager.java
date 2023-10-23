@@ -1,3 +1,5 @@
+package com.github.reginald231;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -8,6 +10,8 @@ import java.util.*;
 public class FeudManager {
     private final String token;
     public ArrayList<String> TeamAMembers;
+    private static int teamAScore;
+    private static int teamBScore;
     public ArrayList<String> TeamBMembers;
     private final DiscordApi api;
     private boolean gameStarted;
@@ -67,15 +71,16 @@ public class FeudManager {
     }
 
     /**
-     * Starts a new game (if not already active). Returns 0 if game was started successfully, 1 if not.*
+     * Starts a new game (if not already active).
+     * @return 1 if game failed to start, otherwise 0.
      */
     public int startGame() {
         if(!gameStarted){
             gameStarted = true;
             return 0;
         }
-        else
-            return 1;
+
+        return 1;
     }
 
     /**

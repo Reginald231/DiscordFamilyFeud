@@ -1,10 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.github.reginald231.DiscordFamilyFeud;
 import org.junit.jupiter.api.Test;
-
 public class TestDiscordFamilyFeud{
 
     @Test
@@ -27,8 +26,8 @@ public class TestDiscordFamilyFeud{
 
 //    @Test
 //    void testCreateInviteEmbed(){
-//        String invite = DiscordFamilyFeud.getInvite();
-//        assertNotNull(DiscordFamilyFeud.createInviteEmbed(invite));
+//        String invite = com.github.reginald231.DiscordFamilyFeud.getInvite();
+//        assertNotNull(com.github.reginald231.DiscordFamilyFeud.createInviteEmbed(invite));
 //
 //    }
 

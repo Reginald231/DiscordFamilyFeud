@@ -1,3 +1,5 @@
+import com.github.reginald231.DiscordFamilyFeud;
+import com.github.reginald231.FeudManager;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
