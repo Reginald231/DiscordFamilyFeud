@@ -1,41 +1,44 @@
 package com.github.reginald231;
 
 import org.javacord.api.DiscordApi;
+import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
+import org.javacord.api.entity.permission.Role;
+import org.javacord.api.entity.team.Team;
+import org.javacord.api.entity.user.User;
 
 import java.util.*;
 
 
+/**
+ * note:  return "<@!" + [userIDStringHere] + ">" is the format for username tags.
+ */
+
 public class FeudManager {
     private final String token;
-    public ArrayList<String> TeamAMembers;
-    private static int teamAScore;
-    private static int teamBScore;
-    public ArrayList<String> TeamBMembers;
+
+    Role teamARole;
+    Role teamBRole;
+    public ArrayList<Player> TeamAMembers;
+    private int teamAScore;
+    private String teamACaptain;
+    private  String teamBCaptain;
+    private int teamBScore;
+    public ArrayList<Player> TeamBMembers;
     private final DiscordApi api;
-    private boolean gameStarted;
+    public boolean gameStarted;
+    public boolean teamsSet;
 
     public FeudManager(String token, DiscordApi api) {
         this.token = token;
         this.api = api;
-        this.TeamAMembers = new ArrayList<String>();
-        this.TeamBMembers = new ArrayList<String>();
+        this.TeamAMembers = new ArrayList<Player>();
+        this.TeamBMembers = new ArrayList<Player>();
     }
 
-    public int addTeamMember(String member, String team) throws InputMismatchException {
-        switch (team.toLowerCase(Locale.ROOT)) {
-            case "a":
-                TeamAMembers.add(member);
-                break;
-            case "b":
-                TeamBMembers.add(member);
-                break;
-            default:
-                throw new InputMismatchException("Invalid team label. Must only be 'A' or 'B'.");
-        }
-        return 0;
-    }
 
     public void removeTeamMember(String member, String team) throws InputMismatchException, NullPointerException {
         switch (team.toLowerCase(Locale.ROOT)) {
@@ -51,21 +54,6 @@ public class FeudManager {
 
     }
 
-    public ArrayList<String> getTeamMembers(String team) {
-        switch (team) {
-            case "a":
-                return TeamAMembers;
-            case "b":
-                return TeamBMembers;
-            default:
-                throw new InputMismatchException("Invalid team label. Must only be 'A' or 'B'.");
-        }
-    }
-
-    public boolean isGameStarted() {
-        return gameStarted;
-    }
-
     public void setGameStarted(boolean gameStarted) {
         this.gameStarted = gameStarted;
     }
@@ -77,11 +65,20 @@ public class FeudManager {
     public int startGame() {
         if(!gameStarted){
             gameStarted = true;
+
+            preGameSetup();
             return 0;
         }
 
         return 1;
     }
+
+    public void preGameSetup(){
+
+        MessageBuilder msg = new MessageBuilder();
+
+    }
+
 
     /**
      * * Ends the current game.

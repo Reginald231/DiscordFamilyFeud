@@ -1,6 +1,5 @@
 package com.github.reginald231;
 
-import com.mysql.cj.protocol.Resultset;
 import java.sql.*;
 import java.util.HashMap;
 
@@ -70,10 +69,12 @@ public class DBManager {
 
     }
 
-    public void getScores(String teamName, int limit) {
-        String sql = "SELECT SCORES, DATE FROM TEAMNAME WHERE TEAMNAME = ?" +
-                "ORDER BY DATE DESC" +
+    public HashMap getScores(String teamName, int limit) {
+        String sql = "SELECT SCORE, DATE FROM LEADERBOARD WHERE TEAMNAME = ? " +
+                "ORDER BY DATE DESC " +
                 "LIMIT ?";
+
+        HashMap hm = new HashMap();
 
         try(PreparedStatement ps = conn.prepareStatement(sql)){
 
@@ -81,7 +82,6 @@ public class DBManager {
             ps.setInt(2, limit);
 
             ResultSet rs = ps.executeQuery();
-            HashMap hm = new HashMap();
 
 
             while(rs.next()){
@@ -94,7 +94,6 @@ public class DBManager {
         }catch (SQLException se){
             se.printStackTrace();
         }
+        return hm;
     }
-
-
 }
