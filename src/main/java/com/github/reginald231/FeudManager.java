@@ -1,98 +1,55 @@
 package com.github.reginald231;
 
-import org.javacord.api.DiscordApi;
-import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.channel.ServerChannel;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.permission.Role;
-import org.javacord.api.entity.team.Team;
-import org.javacord.api.entity.user.User;
+import com.github.reginald231.listeners.EventListener;
+import io.github.cdimascio.dotenv.Dotenv;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
-import java.util.*;
+import javax.security.auth.login.LoginException;
 
 
-/**
- * note:  return "<@!" + [userIDStringHere] + ">" is the format for username tags.
- */
+public class FeudManager{
 
-public class FeudManager {
-    private final String token;
-
-    Role teamARole;
-    Role teamBRole;
-    public ArrayList<Player> TeamAMembers;
-    private int teamAScore;
-    private String teamACaptain;
-    private  String teamBCaptain;
-    private int teamBScore;
-    public ArrayList<Player> TeamBMembers;
-    private final DiscordApi api;
-    public boolean gameStarted;
-    public boolean teamsSet;
-
-    public FeudManager(String token, DiscordApi api) {
-        this.token = token;
-        this.api = api;
-        this.TeamAMembers = new ArrayList<Player>();
-        this.TeamBMembers = new ArrayList<Player>();
-    }
-
-
-    public void removeTeamMember(String member, String team) throws InputMismatchException, NullPointerException {
-        switch (team.toLowerCase(Locale.ROOT)) {
-            case "a":
-                TeamAMembers.remove(member);
-                break;
-            case "b":
-                TeamBMembers.remove(member);
-                break;
-            default:
-                throw new InputMismatchException("Invalid team label. Must only be 'A' or 'B'.");
-        }
-
-    }
-
-    public void setGameStarted(boolean gameStarted) {
-        this.gameStarted = gameStarted;
-    }
+    private final Dotenv config;
+    private final ShardManager shardManager;
 
     /**
-     * Starts a new game (if not already active).
-     * @return 1 if game failed to start, otherwise 0.
+     * Initializes login process for the bot.
+     * @throws LoginException occurs in the case of invalid bot token.
      */
-    public int startGame() {
-        if(!gameStarted){
-            gameStarted = true;
+    public FeudManager() throws LoginException {
+        config = Dotenv.configure().load();
+        String token = config.get("TOKEN");
 
-            preGameSetup();
-            return 0;
-        }
+        DefaultShardManagerBuilder dsmBuilder = DefaultShardManagerBuilder.createDefault(token);
+        dsmBuilder.setStatus(OnlineStatus.ONLINE);
+        dsmBuilder.setActivity(Activity.playing("Getting dressed by Reg."));
+        shardManager = dsmBuilder.build();
+        EventListener el = new EventListener();
+        el.setFeudManager(this);
 
-        return 1;
+        //register listeners
+        shardManager.addEventListener(el);
     }
 
-    public void preGameSetup(){
-
-        MessageBuilder msg = new MessageBuilder();
-
-    }
 
 
     /**
-     * * Ends the current game.
-     *
-     * @return 1 if the game has not already been started. 0 if the game has already been started (successfully ended).
+     * Getter method for Dotenv
+     * @return the Dotenv instance for the environment variables.
      */
-    public int endGame() {
-        if (!gameStarted)
-            return 1;
-
-        else {
-            gameStarted = false;
-            return 0;
-        }
-
+    public Dotenv getConfig() {
+        return this.config;
     }
+
+    /**
+     * Getter method for ShardManager.
+     * @return the ShardManager instance for the bot.
+     */
+    public ShardManager getShardManager(){
+        return this.shardManager;
+    }
+
 }

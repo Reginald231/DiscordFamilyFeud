@@ -1,50 +1,20 @@
 package com.github.reginald231;
 
-import org.javacord.api.entity.permission.Role;
-import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.user.User;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 
 public class Player {
-    private String username;
-    private final User user;
-    private final Role team;
 
-    private Server server;
+    private User user;
+    private Role teamRole;
+    private String username;
     public boolean isCaptain;
 
-    public Player (User user, Role team, Server server){
-        this.user = user;
-        this.username = this.user.getDisplayName(server);
-        this.team = team;
-    }
+    public String getUsername() {return this.username;}
 
-    public Player (User user, Role team, boolean isCaptain){
-        this.user = user;
-        this.team = team;
-        this.isCaptain = isCaptain;
-    }
+    public User getUser(){return this.user;}
 
-    public Role getTeam(){
-        return this.team;
-    }
+    public Role getTeamRole(){return this.teamRole;}
 
-    public User getUser(){
-        return this.user;
-    }
-
-    public Server getServer(){
-        return this.server;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getTeamName(){
-        return this.team.getName();
-    }
-
-    public String getServerNamer(){
-        return this.server.getName();
-    }
+    public boolean isCaptain() {return isCaptain;}
 }

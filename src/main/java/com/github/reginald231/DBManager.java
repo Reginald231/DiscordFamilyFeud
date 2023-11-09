@@ -1,21 +1,25 @@
 package com.github.reginald231;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.*;
 import java.util.HashMap;
 
 public class DBManager {
 
-    FeudManager fm;
     private Connection conn;
-    private final String DB_URL = "";
-    private final String USER = "";
-    private final String PASS = "";
+    private Dotenv config;
+    private String DB_URL;
+    private String USER;
+    private String PASS;
 
-    public DBManager(FeudManager fm) {
+    public DBManager() {
         try{
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            this.DB_URL = config.get("DB_URL");
+            this.USER = config.get("DB_USER");
+            this.PASS = config.get("DB_PASS");
+            Connection conn = DriverManager.getConnection(this.DB_URL, this.USER, this.PASS);
             this.conn = conn;
-            this.fm = fm;
 
         }catch (SQLException e){
             e.printStackTrace();
