@@ -62,18 +62,80 @@ public class EventListener extends ListenerAdapter {
                 break;
 
             case "setup":
+                this.setup(event);
+                break;
 
-                int teamSize = event.getOption("team_size").getAsInt();
-                String teamAName = event.getOption("team_a_name").getAsString();
-                String teamBName = event.getOption("team_b_name").getAsString();
-                Role teamARole = event.getOption("team_a_role").getAsRole();
-                Role teamBRole = event.getOption("team_b_role").getAsRole();
-                Member teamACaptain = event.getOption("team_a_captain").getAsMember();
-                Member teamBCaptain = event.getOption("team_b_captain").getAsMember();
-                Member host = event.getOption("host").getAsMember();
-                Role hostRole = event.getOption("host_role").getAsRole();
+            case "create_roles":
+                this.createRoles(event);
+                break;
 
-                String setupResults = """
+            case "invite":
+                this.invite(event);
+                break;
+
+            case "support":
+                this.support(event);
+                break;
+
+            default:
+                event.reply("Unacknowledged command received. Update switch statement.").queue();
+                break;
+
+        }
+    }
+
+
+    /**
+     * Provides a bot invite link within an embed for users to add the bot to their server.
+     * @param event SlashCommandInteractionEvent received from the user interaction
+     */
+    private void invite(@NotNull SlashCommandInteractionEvent event){
+        String inviteLink = event.getJDA().getInviteUrl();
+        event.deferReply().queue();
+        event.getHook().sendMessageEmbeds(getInviteEmbed(inviteLink).build()).queue();
+    }
+
+    /**
+     * Creates roles usable for Discord Feud.
+     * @param event SlashCommandInteractionEvent received from the user interaction
+     */
+    private void createRoles(@NotNull SlashCommandInteractionEvent event){
+        event.deferReply().queue();
+        String teamRole1 = event.getOption("team_role_1").getAsString();
+        String teamRole2 = event.getOption("team_role_2").getAsString();
+        String hostRole = event.getOption("host_role").getAsString();
+
+        event.getGuild().createRole().setName(teamRole1).setHoisted(true).setColor(Color.RED).queue();
+        event.getGuild().createRole().setName(teamRole2).setHoisted(true).setColor(Color.CYAN).queue();
+        event.getGuild().createRole().setName(hostRole).setHoisted(true).setColor(Color.GREEN).queue();
+
+        String roleList = """
+                The following roles have been created:
+                %s
+                %s
+                %s""".formatted(teamRole1, teamRole2, hostRole);
+
+        event.getHook().sendMessage(roleList).setEphemeral(true).queue();
+    }
+
+    /**
+     * Sets up key game information from the setup command
+     * @param event SlashCommandInteractionEvent received from the user interaction
+     */
+    private void setup(@NotNull SlashCommandInteractionEvent event){
+        event.deferReply().queue();
+
+        int teamSize = event.getOption("team_size").getAsInt();
+        String team1Name = event.getOption("team_a_name").getAsString();
+        String team2Name = event.getOption("team_b_name").getAsString();
+        Role team1Role = event.getOption("team_a_role").getAsRole();
+        Role team2Role = event.getOption("team_b_role").getAsRole();
+        Member teamACaptain = event.getOption("team_a_captain").getAsMember();
+        Member teamBCaptain = event.getOption("team_b_captain").getAsMember();
+        Member host = event.getOption("host").getAsMember();
+        Role hostRole = event.getOption("host_role").getAsRole();
+
+        String setupResults = """
                        Team Size:\t%d
                        Team A Name:\t%s
                        Team B Name:\t%s
@@ -82,35 +144,30 @@ public class EventListener extends ListenerAdapter {
                        Team A Captain:\t%s
                        Team B Captain:\t%s
                        Host:\t%s
-                       Host Role:\t%s""".formatted(teamSize, teamAName, teamBName, teamARole, teamBRole, teamACaptain,
-                        teamBCaptain, host, hostRole);
-                event.deferReply().queue();
+                       Host Role:\t%s""".formatted(teamSize, team1Name, team2Name, team1Role, team2Role, teamACaptain,
+                teamBCaptain, host, hostRole);
 
-                event.getHook().sendMessage(setupResults).setEphemeral(true).queue();
+        this.fm.setTeam1Role(team1Role);
+        this.fm.setTeam2Role(team2Role);
+        this.fm.setHost(host, hostRole);
+        this.fm.setTeamSize(teamSize);
 
-                break;
+        event.getHook().sendMessage(setupResults).setEphemeral(true).queue();
 
-            case "invite":
-                String inviteLink = event.getJDA().getInviteUrl();
-                event.deferReply().queue();
-                event.getHook().sendMessageEmbeds(getInviteEmbed(inviteLink).build()).queue();
-                break;
+    }
 
-            case "support":
-                event.deferReply().queue();
-                event.getHook().sendMessageEmbeds(getSupportEmbed().build()).queue();
-                break;
-
-            default:
-                event.reply("Unknown command received.");
-                break;
-
-        }
+    /**
+     * Provides an embed to users, allowing them to support the creator if they wish.
+     * @param event SlashCommandInteractionEvent received from the user interaction
+     */
+    private void support(@NotNull SlashCommandInteractionEvent event){
+        event.deferReply().queue();
+        event.getHook().sendMessageEmbeds(getSupportEmbed().build()).queue();
     }
 
     /**
      * Gets the FeudManager used by EventListener.
-     * @return
+     * @return The respective FeudManager instance assigned to this EventListener.
      */
     public FeudManager getFeudManager(){return this.fm;}
 
