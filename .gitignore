@@ -23,18 +23,8 @@
 hs_err_pid*
 replay_pid*
 
-!/build/spotless/
-!/build/spotless-prettier-node-modules-6274374e72178db42d589e4394558e69/
-!/build/tmp/
+
 !/.gradle/
-.gradle/7.4.2/executionHistory/executionHistory.bin
-.gradle/7.4.2/executionHistory/executionHistory.lock
-.gradle/7.4.2/fileHashes/fileHashes.bin
-.gradle/7.4.2/fileHashes/fileHashes.lock
-.gradle/7.4.2/fileHashes/resourceHashesCache.bin
-.gradle/buildOutputCleanup/buildOutputCleanup.lock
-.gradle/buildOutputCleanup/cache.properties
-.gradle/buildOutputCleanup/outputFiles.bin
-build/tmp/compileJava/previous-compilation-data.bin
-build/tmp/compileTestJava/previous-compilation-data.bin
+!/gradle/
+!/build/
 .env
