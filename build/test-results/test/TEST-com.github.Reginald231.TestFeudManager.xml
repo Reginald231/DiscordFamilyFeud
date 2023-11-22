@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.github.Reginald231.TestFeudManager" tests="20" skipped="0" failures="0" errors="0" timestamp="2023-11-22T16:44:08" hostname="Reginalds-MacBook-Pro.local" time="0.064">
+<testsuite name="com.github.Reginald231.TestFeudManager" tests="20" skipped="0" failures="0" errors="0" timestamp="2023-11-22T19:34:36" hostname="Reginalds-MacBook-Pro.local" time="0.066">
   <properties/>
-  <testcase name="testSetTeam1Role()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
-  <testcase name="testSetTeam2Role()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
-  <testcase name="testGetTeam1Captain()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testFindPlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testSetTeam1Role()" classname="com.github.Reginald231.TestFeudManager" time="0.013"/>
+  <testcase name="testSetTeam2Role()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testGetTeam1Captain()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testFindPlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
   <testcase name="testGetHost()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testSetTeamSize()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testSetTeamSize()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
   <testcase name="testGetTeamSize()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testRemovePlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testGetShardManager()" classname="com.github.Reginald231.TestFeudManager" time="0.0"/>
-  <testcase name="testGetTeam2Captain()" classname="com.github.Reginald231.TestFeudManager" time="0.003"/>
-  <testcase name="testRemoveHost()" classname="com.github.Reginald231.TestFeudManager" time="0.0"/>
-  <testcase name="testAddPlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
-  <testcase name="testGetTeam1List()" classname="com.github.Reginald231.TestFeudManager" time="0.0"/>
-  <testcase name="testGetTeam1Role()" classname="com.github.Reginald231.TestFeudManager" time="0.009"/>
-  <testcase name="testGetTeam2List()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testRemovePlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testGetShardManager()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testGetTeam2Captain()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testRemoveHost()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testAddPlayer()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testGetTeam1List()" classname="com.github.Reginald231.TestFeudManager" time="0.005"/>
+  <testcase name="testGetTeam1Role()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
+  <testcase name="testGetTeam2List()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
   <testcase name="testGetTeam2Role()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testGetConfig()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testSetHostRole()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testGetHostRole()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <testcase name="testSetHost()" classname="com.github.Reginald231.TestFeudManager" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <testcase name="testGetConfig()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testSetHostRole()" classname="com.github.Reginald231.TestFeudManager" time="0.004"/>
+  <testcase name="testGetHostRole()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <testcase name="testSetHost()" classname="com.github.Reginald231.TestFeudManager" time="0.002"/>
+  <system-out><![CDATA[Building commands...
+All commands built.
+]]></system-out>
+  <system-err><![CDATA[[JDA [0 / 1] MainWS-ReadThread] INFO WebSocketClient - Connected to WebSocket
+[Test worker] INFO ShardManager - Login Successful!
+]]></system-err>
 </testsuite>
