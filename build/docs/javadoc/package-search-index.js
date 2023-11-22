@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.reginald231"},{"l":"com.github.reginald231.commands"},{"l":"com.github.reginald231.listeners"}];updateSearchResults();
