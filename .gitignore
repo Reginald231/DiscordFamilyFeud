@@ -25,6 +25,4 @@ replay_pid*
 
 
 !/.gradle/
-!/gradle/
-!/build/
 .env
