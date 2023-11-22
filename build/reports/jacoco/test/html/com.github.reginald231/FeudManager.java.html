@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FeudManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DiscordFeud</a> &gt; <a href="index.source.html" class="el_package">com.github.reginald231</a> &gt; <span class="el_source">FeudManager.java</span></div><h1>FeudManager.java</h1><pre class="source lang-java linenums">package com.github.reginald231;
+
+import com.github.reginald231.listeners.EventListener;
+import io.github.cdimascio.dotenv.Dotenv;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
+
+public class FeudManager {
+    private final Dotenv config;
+    private final ShardManager shardManager;
+
+    private Member host;
+    private Role hostRole;
+    private Role team1Role;
+    private Member team1Captain;
+    private Member team2Captain;
+    private Role team2Role;
+
+    private int teamSize;
+
+    private ArrayList&lt;Player&gt; team1List;
+    private ArrayList&lt;Player&gt; team2List;
+
+    /**
+     * Initializes login process for the bot.
+     * @throws LoginException occurs in the case of invalid bot token.
+     */
+<span class="fc" id="L38">    public FeudManager() throws LoginException {</span>
+<span class="fc" id="L39">        config = Dotenv.configure().load();</span>
+<span class="fc" id="L40">        String token = config.get(&quot;TOKEN&quot;);</span>
+
+<span class="fc" id="L42">        DefaultShardManagerBuilder dsmBuilder = DefaultShardManagerBuilder.createDefault(</span>
+            token
+        );
+<span class="fc" id="L45">        dsmBuilder.setStatus(OnlineStatus.ONLINE);</span>
+<span class="fc" id="L46">        dsmBuilder.setActivity(Activity.playing(&quot;Getting dressed by Reg.&quot;));</span>
+<span class="fc" id="L47">        shardManager = dsmBuilder.build();</span>
+<span class="fc" id="L48">        EventListener el = new EventListener();</span>
+<span class="fc" id="L49">        el.setFeudManager(this);</span>
+
+        //register listeners
+<span class="fc" id="L52">        shardManager.addEventListener(el);</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Adds a new player to a team using the provided team role (provided that the role is one of the registered
+     * team roles for the game.)
+     * @param p Player to add to the respective team list.
+     * @param teamrole Role of the player to be added to the respective team list.
+     */
+    public void addPlayer(Player p, Role teamrole) {
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        if (teamrole == this.team1Role) this.team1List.add(p); else if (</span>
+            teamrole == team2Role
+        ) {
+<span class="nc" id="L65">            this.team2List.add(p);</span>
+<span class="nc" id="L66">        } else throw new InvalidParameterException(</span>
+            &quot;Provided team role does not match the currently registered roles.&quot;
+        );
+<span class="nc" id="L69">    }</span>
+
+    /**
+     * Removes the given player from the specified team.
+     * @param p The player to remove
+     * @param teamrole The team to remove the player from.
+     * @return 0 if the player was removed successfully, -1 if the player could not be found and removed.
+     */
+    public int removePlayer(Player p, Role teamrole) {
+        HashMap&lt;Player, Role&gt; result;
+
+        try {
+<span class="nc" id="L81">            result = (HashMap&lt;Player, Role&gt;) findPlayer(p, teamrole);</span>
+<span class="nc" id="L82">        } catch (InvalidParameterException e) {</span>
+<span class="nc" id="L83">            return -1;</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (!result.isEmpty()) {</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (teamrole == this.team1Role) team1List.remove(p);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (teamrole == this.team2Role) team2List.remove(p);</span>
+        }
+
+<span class="nc" id="L90">        return 0;</span>
+    }
+
+    /**
+     * Searches for the provided player in the provided team.
+     * @param p Player to be searched.
+     * @param teamRole Team role of the player to be searched.
+     * @return A hashmap of the found player and role.
+     * @throws InvalidParameterException if player cannot be found.
+     */
+    public Map&lt;Player, Role&gt; findPlayer(Player p, Role teamRole) {
+<span class="nc" id="L101">        HashMap&lt;Player, Role&gt; result = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (teamRole == this.team1Role) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            for (Player teammate : team1List) {</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                if (teammate.getUsername().equals(p.getUsername())) result.put(</span>
+                    p,
+                    teamRole
+                );
+<span class="nc" id="L109">            }</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        } else if (teamRole == this.team2Role) {</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            for (Player teammate : team2List) {</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (teammate.getUsername().equals(p.getUsername())) result.put(</span>
+                    p,
+                    teamRole
+                );
+<span class="nc" id="L116">            }</span>
+<span class="nc" id="L117">        } else throw new InvalidParameterException(</span>
+            &quot;The provided role is not currently registered in this game session.&quot;
+        );
+<span class="nc" id="L120">        return result;</span>
+    }
+
+    /**
+     * Removes the current host clears current host role in the game
+     * @return 0 if host and host role was cleared successfully, -1 if there was no host and role to remove.
+     */
+    public int removeHost() {
+<span class="nc bnc" id="L128" title="All 4 branches missed.">        if (host != null &amp;&amp; hostRole != null) {</span>
+<span class="nc" id="L129">            this.host = null;</span>
+<span class="nc" id="L130">            this.hostRole = null;</span>
+<span class="nc" id="L131">            return 0;</span>
+<span class="nc" id="L132">        } else return -1;</span>
+    }
+
+    /**
+     * Getter method for Dotenv
+     * @return the Dotenv instance for the environment variables.
+     */
+    public Dotenv getConfig() {
+<span class="nc" id="L140">        return this.config;</span>
+    }
+
+    /**
+     *
+     * @return the ShardManager instance for the bot.
+     */
+    public ShardManager getShardManager() {
+<span class="nc" id="L148">        return this.shardManager;</span>
+    }
+
+    /**
+     *
+     * @return first team role value.
+     */
+    public Role getTeam1Role() {
+<span class="nc" id="L156">        return this.team1Role;</span>
+    }
+
+    public Member getTeam1Captain() {
+<span class="nc" id="L160">        return this.team1Captain;</span>
+    }
+
+    public List&lt;Player&gt; getTeam1List() {
+<span class="nc" id="L164">        return this.team1List;</span>
+    }
+
+    /**
+     *
+     * @return second team role value.
+     */
+    public Role getTeam2Role() {
+<span class="nc" id="L172">        return this.team2Role;</span>
+    }
+
+    public Member getTeam2Captain() {
+<span class="nc" id="L176">        return this.team2Captain;</span>
+    }
+
+    public List&lt;Player&gt; getTeam2List() {
+<span class="nc" id="L180">        return this.team2List;</span>
+    }
+
+    public Member getHost() {
+<span class="nc" id="L184">        return this.host;</span>
+    }
+
+    public Role getHostRole() {
+<span class="nc" id="L188">        return this.hostRole;</span>
+    }
+
+    public void setTeam1Role(Role team1Role) {
+<span class="nc" id="L192">        this.team1Role = team1Role;</span>
+<span class="nc" id="L193">    }</span>
+
+    public void setTeam2Role(Role team2Role) {
+<span class="nc" id="L196">        this.team2Role = team2Role;</span>
+<span class="nc" id="L197">    }</span>
+
+    /**
+     * Adds a host to the game.
+     * @param host User to be designated as the host of the game.
+     * @param hostRole Role for the designated host of the game.
+     */
+    public void setHost(Member host, Role hostRole) {
+<span class="nc" id="L205">        this.host = host;</span>
+<span class="nc" id="L206">        this.hostRole = hostRole;</span>
+<span class="nc" id="L207">    }</span>
+
+    public void setHostRole(Role hostRole) {
+<span class="nc" id="L210">        this.hostRole = hostRole;</span>
+<span class="nc" id="L211">    }</span>
+
+    public int getTeamSize() {
+<span class="nc" id="L214">        return this.teamSize;</span>
+    }
+
+    public void setTeamSize(int teamSize) {
+<span class="nc" id="L218">        this.teamSize = teamSize;</span>
+<span class="nc" id="L219">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

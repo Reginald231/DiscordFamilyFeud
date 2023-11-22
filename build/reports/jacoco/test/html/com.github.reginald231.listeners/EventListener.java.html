@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DiscordFeud</a> &gt; <a href="index.source.html" class="el_package">com.github.reginald231.listeners</a> &gt; <span class="el_source">EventListener.java</span></div><h1>EventListener.java</h1><pre class="source lang-java linenums">package com.github.reginald231.listeners;
+
+import com.github.reginald231.FeudManager;
+import com.github.reginald231.commands.CommandManager;
+import java.awt.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
+
+public class EventListener extends ListenerAdapter {
+
+  private FeudManager fm;
+  private final CommandManager commandManager;
+
+<span class="fc" id="L21">  public EventListener() {</span>
+<span class="fc" id="L22">    this.commandManager = new CommandManager();</span>
+<span class="fc" id="L23">  }</span>
+
+<span class="nc" id="L25">  public EventListener(FeudManager fm) {</span>
+<span class="nc" id="L26">    this.fm = fm;</span>
+<span class="nc" id="L27">    this.commandManager = new CommandManager();</span>
+<span class="nc" id="L28">  }</span>
+
+  @Override
+  public void onGuildReady(@NotNull GuildReadyEvent event) {
+    //event.getGuild().updateCommands().queue(); //Deletes all commands for the respective guild onReady.
+<span class="nc" id="L33">    event</span>
+<span class="nc" id="L34">      .getGuild()</span>
+<span class="nc" id="L35">      .updateCommands()</span>
+<span class="nc" id="L36">      .addCommands(commandManager.getCommandDataList())</span>
+<span class="nc" id="L37">      .queue();</span>
+<span class="nc" id="L38">  }</span>
+
+  @Override
+  public void onGuildJoin(@NotNull GuildJoinEvent event) {
+<span class="nc" id="L42">    event</span>
+<span class="nc" id="L43">      .getJDA()</span>
+<span class="nc" id="L44">      .updateCommands()</span>
+<span class="nc" id="L45">      .addCommands(commandManager.getCommandDataList())</span>
+<span class="nc" id="L46">      .queue();</span>
+<span class="nc" id="L47">  }</span>
+
+  @Override
+  public void onReady(@NotNull ReadyEvent event) {
+    //event.getJDA().updateCommands().queue(); //Deletes all global commands.
+<span class="nc" id="L52">  }</span>
+
+  @Override
+  public void onSlashCommandInteraction(
+    @NotNull SlashCommandInteractionEvent event
+  ) {
+<span class="nc" id="L58">    System.out.println(&quot;Caught a command: &quot; + event.getName());</span>
+<span class="nc" id="L59">    String commandName = event.getName();</span>
+
+<span class="nc bnc" id="L61" title="All 7 branches missed.">    switch (commandName.toLowerCase()) {</span>
+      case &quot;test&quot;:
+<span class="nc" id="L63">        System.out.println(&quot;test comm&quot;);</span>
+<span class="nc" id="L64">        event.reply(&quot;Received test command.&quot;).setEphemeral(true).queue();</span>
+<span class="nc" id="L65">        break;</span>
+      case &quot;play&quot;:
+<span class="nc" id="L67">        event.reply(&quot;Received play command.&quot;).setEphemeral(true).queue();</span>
+<span class="nc" id="L68">        break;</span>
+      case &quot;setup&quot;:
+<span class="nc" id="L70">        this.setup(event);</span>
+<span class="nc" id="L71">        break;</span>
+      case &quot;create_roles&quot;:
+<span class="nc" id="L73">        this.createRoles(event);</span>
+<span class="nc" id="L74">        break;</span>
+      case &quot;invite&quot;:
+<span class="nc" id="L76">        this.invite(event);</span>
+<span class="nc" id="L77">        break;</span>
+      case &quot;support&quot;:
+<span class="nc" id="L79">        this.support(event);</span>
+<span class="nc" id="L80">        break;</span>
+      default:
+<span class="nc" id="L82">        event</span>
+<span class="nc" id="L83">          .reply(&quot;Unacknowledged command received. Update switch statement.&quot;)</span>
+<span class="nc" id="L84">          .queue();</span>
+        break;
+    }
+<span class="nc" id="L87">  }</span>
+
+  /**
+   * Provides a bot invite link within an embed for users to add the bot to their server.
+   * @param event SlashCommandInteractionEvent received from the user interaction
+   */
+  private void invite(@NotNull SlashCommandInteractionEvent event) {
+<span class="nc" id="L94">    String inviteLink = event.getJDA().getInviteUrl();</span>
+<span class="nc" id="L95">    event.deferReply().queue();</span>
+<span class="nc" id="L96">    event</span>
+<span class="nc" id="L97">      .getHook()</span>
+<span class="nc" id="L98">      .sendMessageEmbeds(getInviteEmbed(inviteLink).build())</span>
+<span class="nc" id="L99">      .queue();</span>
+<span class="nc" id="L100">  }</span>
+
+  /**
+   * Creates roles usable for Discord Feud.
+   * @param event SlashCommandInteractionEvent received from the user interaction
+   */
+  private void createRoles(@NotNull SlashCommandInteractionEvent event) {
+<span class="nc" id="L107">    event.deferReply().queue();</span>
+<span class="nc" id="L108">    String teamRole1 = event.getOption(&quot;team_role_1&quot;).getAsString();</span>
+<span class="nc" id="L109">    String teamRole2 = event.getOption(&quot;team_role_2&quot;).getAsString();</span>
+<span class="nc" id="L110">    String hostRole = event.getOption(&quot;host_role&quot;).getAsString();</span>
+
+<span class="nc" id="L112">    event</span>
+<span class="nc" id="L113">      .getGuild()</span>
+<span class="nc" id="L114">      .createRole()</span>
+<span class="nc" id="L115">      .setName(teamRole1)</span>
+<span class="nc" id="L116">      .setHoisted(true)</span>
+<span class="nc" id="L117">      .setColor(Color.RED)</span>
+<span class="nc" id="L118">      .queue();</span>
+<span class="nc" id="L119">    event</span>
+<span class="nc" id="L120">      .getGuild()</span>
+<span class="nc" id="L121">      .createRole()</span>
+<span class="nc" id="L122">      .setName(teamRole2)</span>
+<span class="nc" id="L123">      .setHoisted(true)</span>
+<span class="nc" id="L124">      .setColor(Color.CYAN)</span>
+<span class="nc" id="L125">      .queue();</span>
+<span class="nc" id="L126">    event</span>
+<span class="nc" id="L127">      .getGuild()</span>
+<span class="nc" id="L128">      .createRole()</span>
+<span class="nc" id="L129">      .setName(hostRole)</span>
+<span class="nc" id="L130">      .setHoisted(true)</span>
+<span class="nc" id="L131">      .setColor(Color.GREEN)</span>
+<span class="nc" id="L132">      .queue();</span>
+
+<span class="nc" id="L134">    String roleList =</span>
+<span class="nc" id="L135">      &quot;The following roles have been created:\n%s\n%s\n%s&quot;.formatted(</span>
+          teamRole1,
+          teamRole2,
+          hostRole
+        );
+
+<span class="nc" id="L141">    event.getHook().sendMessage(roleList).setEphemeral(true).queue();</span>
+<span class="nc" id="L142">  }</span>
+
+  /**
+   * Sets up key game information from the setup command
+   * @param event SlashCommandInteractionEvent received from the user interaction
+   */
+  private void setup(@NotNull SlashCommandInteractionEvent event) {
+<span class="nc" id="L149">    event.deferReply().queue();</span>
+
+<span class="nc" id="L151">    int teamSize = event.getOption(&quot;team_size&quot;).getAsInt();</span>
+<span class="nc" id="L152">    String team1Name = event.getOption(&quot;team_a_name&quot;).getAsString();</span>
+<span class="nc" id="L153">    String team2Name = event.getOption(&quot;team_b_name&quot;).getAsString();</span>
+<span class="nc" id="L154">    Role team1Role = event.getOption(&quot;team_a_role&quot;).getAsRole();</span>
+<span class="nc" id="L155">    Role team2Role = event.getOption(&quot;team_b_role&quot;).getAsRole();</span>
+<span class="nc" id="L156">    Member teamACaptain = event.getOption(&quot;team_a_captain&quot;).getAsMember();</span>
+<span class="nc" id="L157">    Member teamBCaptain = event.getOption(&quot;team_b_captain&quot;).getAsMember();</span>
+<span class="nc" id="L158">    Member host = event.getOption(&quot;host&quot;).getAsMember();</span>
+<span class="nc" id="L159">    Role hostRole = event.getOption(&quot;host_role&quot;).getAsRole();</span>
+
+<span class="nc" id="L161">    String setupResults =</span>
+      &quot;Team Size:\t%d\n&quot; +
+      &quot;Team A Name:\t%s\n&quot; +
+      &quot;Team B Name:\t%s\n&quot; +
+      &quot;Team A Role:\t%s\n&quot; +
+      &quot;Team B Role:\t%s\n&quot; +
+      &quot;Team A Captain:\t%s\n&quot; +
+      &quot;Team B Captain:\t%s\n&quot; +
+<span class="nc" id="L169">      (&quot;Host:\t%s\n&quot; + &quot;Host Role:\t%s&quot;).formatted(</span>
+<span class="nc" id="L170">          teamSize,</span>
+          team1Name,
+          team2Name,
+          team1Role,
+          team2Role,
+          teamACaptain,
+          teamBCaptain,
+          host,
+          hostRole
+        );
+
+<span class="nc" id="L181">    this.fm.setTeam1Role(team1Role);</span>
+<span class="nc" id="L182">    this.fm.setTeam2Role(team2Role);</span>
+<span class="nc" id="L183">    this.fm.setHost(host, hostRole);</span>
+<span class="nc" id="L184">    this.fm.setTeamSize(teamSize);</span>
+
+<span class="nc" id="L186">    event.getHook().sendMessage(setupResults).setEphemeral(true).queue();</span>
+<span class="nc" id="L187">  }</span>
+
+  /**
+   * Provides an embed to users, allowing them to support the creator if they wish.
+   * @param event SlashCommandInteractionEvent received from the user interaction
+   */
+  private void support(@NotNull SlashCommandInteractionEvent event) {
+<span class="nc" id="L194">    event.deferReply().queue();</span>
+<span class="nc" id="L195">    event.getHook().sendMessageEmbeds(getSupportEmbed().build()).queue();</span>
+<span class="nc" id="L196">  }</span>
+
+  /**
+   * Gets the FeudManager used by EventListener.
+   * @return The respective FeudManager instance assigned to this EventListener.
+   */
+  public FeudManager getFeudManager() {
+<span class="nc" id="L203">    return this.fm;</span>
+  }
+
+  /**
+   * Sets the FeudManager to be used by EventListener.
+   * @param fm the FeudManager instance to assign to EventListener.
+   */
+  public void setFeudManager(FeudManager fm) {
+<span class="fc" id="L211">    this.fm = fm;</span>
+<span class="fc" id="L212">  }</span>
+
+  /**
+   * Generates an embed to present to users who wish to support the creator.
+   * @return EmbedBuilder to respond to slash command event.
+   */
+  public EmbedBuilder getSupportEmbed() {
+<span class="nc" id="L219">    EmbedBuilder eb = new EmbedBuilder();</span>
+
+<span class="nc" id="L221">    eb.setTitle(&quot;Thank you for using the program. ♥\uFE0F&quot;, null);</span>
+<span class="nc" id="L222">    eb.setColor(new Color(0xBFDAF7));</span>
+<span class="nc" id="L223">    String tipLink = &quot;https://www.buymeacoffee.com/v2ftrsbdkv7&quot;;</span>
+<span class="nc" id="L224">    String supportMessage =</span>
+      &quot;Hi, and thanks for checking out FeudBot.\n &quot; +
+<span class="nc" id="L226">      &quot;If you would like to support me and my projects, consider [leaving a tip here. ☕\uFE0F](%s).\n&quot;.formatted(</span>
+          tipLink
+        ) +
+      &quot;Of course, these tips are not necessary, but they are always deeply appreciated.&quot;;
+<span class="nc" id="L230">    String supportEmbedThumbnail =</span>
+      &quot;https://cdn.buymeacoffee.com/uploads/profile_pictures/2023/10/CpfzXbqDUKjnP7pg.&quot; +
+      &quot;jpg@300w_0e.webp&quot;;
+
+<span class="nc" id="L234">    eb.addField(&quot;A message from Reg.&quot;, supportMessage, false);</span>
+<span class="nc" id="L235">    eb.setThumbnail(supportEmbedThumbnail);</span>
+
+<span class="nc" id="L237">    return eb;</span>
+  }
+
+  /**
+   * Builds an embed containing a bot invite link.
+   * @param inviteLink Bot invite link
+   * @return an EmbedBuilder containing the invite link.
+   */
+  public EmbedBuilder getInviteEmbed(String inviteLink) {
+<span class="nc" id="L246">    EmbedBuilder eb = new EmbedBuilder();</span>
+
+<span class="nc" id="L248">    eb.setTitle(&quot;FeudBot&quot;, null);</span>
+<span class="nc" id="L249">    eb.setColor(Color.BLUE);</span>
+<span class="nc" id="L250">    eb.addField(</span>
+      &quot;Invite the bot to your server!&quot;,
+<span class="nc" id="L252">      &quot;Use [this link](%s) to invite FeudBot to your server.&quot;.formatted(</span>
+          inviteLink
+        ),
+      false
+    );
+
+<span class="nc" id="L258">    return eb;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

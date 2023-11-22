@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommandManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DiscordFeud</a> &gt; <a href="index.source.html" class="el_package">com.github.reginald231.commands</a> &gt; <span class="el_source">CommandManager.java</span></div><h1>CommandManager.java</h1><pre class="source lang-java linenums">package com.github.reginald231.commands;
+
+import java.util.ArrayList;
+import java.util.List;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+
+public class CommandManager extends ListenerAdapter {
+<span class="fc" id="L13">    private final List&lt;CommandData&gt; commandDataList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L15">    public CommandManager() {</span>
+<span class="fc" id="L16">        buildCommands();</span>
+<span class="fc" id="L17">    }</span>
+
+    /**
+     * Builds all bot commands, storing them in a List of CommandData instances.
+     */
+    public void buildCommands() {
+<span class="fc" id="L23">        System.out.println(&quot;Building commands...&quot;);</span>
+<span class="fc" id="L24">        this.commandDataList.add(</span>
+<span class="fc" id="L25">                Commands.slash(&quot;test&quot;, &quot;Test command for development purposes.&quot;)</span>
+            );
+<span class="fc" id="L27">        this.commandDataList.add(</span>
+<span class="fc" id="L28">                Commands.slash(&quot;invite&quot;, &quot;Provides a bot invite link.&quot;)</span>
+            );
+<span class="fc" id="L30">        this.commandDataList.add(</span>
+<span class="fc" id="L31">                Commands.slash(</span>
+                    &quot;support&quot;,
+                    &quot;Post an embed for users to support the creator&quot;
+                )
+            );
+<span class="fc" id="L36">        this.commandDataList.add(</span>
+<span class="fc" id="L37">                Commands.slash(&quot;play&quot;, &quot;Test command for playing the game.&quot;)</span>
+            );
+<span class="fc" id="L39">        this.commandDataList.add(</span>
+                Commands
+<span class="fc" id="L41">                    .slash(&quot;setup&quot;, &quot;Begin setting up a new game.&quot;)</span>
+<span class="fc" id="L42">                    .addOption(</span>
+                        OptionType.INTEGER,
+                        &quot;team_size&quot;,
+                        &quot;The size of each team&quot;,
+                        true
+                    )
+<span class="fc" id="L48">                    .addOption(</span>
+                        OptionType.STRING,
+                        &quot;team_a_name&quot;,
+                        &quot;The name of Team A&quot;,
+                        true
+                    )
+<span class="fc" id="L54">                    .addOption(</span>
+                        OptionType.STRING,
+                        &quot;team_b_name&quot;,
+                        &quot;The name of Team B&quot;,
+                        true
+                    )
+<span class="fc" id="L60">                    .addOption(</span>
+                        OptionType.ROLE,
+                        &quot;team_a_role&quot;,
+                        &quot;Role to use for Team A&quot;,
+                        true
+                    )
+<span class="fc" id="L66">                    .addOption(</span>
+                        OptionType.ROLE,
+                        &quot;team_b_role&quot;,
+                        &quot;Role to use for Team B&quot;,
+                        true
+                    )
+<span class="fc" id="L72">                    .addOption(</span>
+                        OptionType.MENTIONABLE,
+                        &quot;team_a_captain&quot;,
+                        &quot;The captain of Team A&quot;,
+                        true
+                    )
+<span class="fc" id="L78">                    .addOption(</span>
+                        OptionType.MENTIONABLE,
+                        &quot;team_b_captain&quot;,
+                        &quot;The captain of Team B&quot;,
+                        true
+                    )
+<span class="fc" id="L84">                    .addOption(</span>
+                        OptionType.MENTIONABLE,
+                        &quot;host&quot;,
+                        &quot;The host for this session&quot;,
+                        true
+                    )
+<span class="fc" id="L90">                    .addOption(</span>
+                        OptionType.ROLE,
+                        &quot;host_role&quot;,
+                        &quot;The role for the host of this session&quot;,
+                        true
+                    )
+            );
+
+<span class="fc" id="L98">        this.commandDataList.add(</span>
+                Commands
+<span class="fc" id="L100">                    .slash(</span>
+                        &quot;create_roles&quot;,
+                        &quot;Creates new roles to use for&quot; +
+                        &quot; Discord Feud. (Not necessary to play&quot;
+                    )
+<span class="fc" id="L105">                    .addOption(</span>
+                        OptionType.STRING,
+                        &quot;team_role_1&quot;,
+                        &quot;The name for the first team role you'd like to make&quot;,
+                        true
+                    )
+<span class="fc" id="L111">                    .addOption(</span>
+                        OptionType.STRING,
+                        &quot;team_role_2&quot;,
+                        &quot;The name for the second team role you'd like to make&quot;,
+                        true
+                    )
+<span class="fc" id="L117">                    .addOption(</span>
+                        OptionType.STRING,
+                        &quot;host_role&quot;,
+                        &quot;The name of host role you'd like to make.&quot;,
+                        true
+                    )
+<span class="fc" id="L123">                    .setDefaultPermissions(</span>
+<span class="fc" id="L124">                        DefaultMemberPermissions.enabledFor(</span>
+                            Permission.MANAGE_ROLES
+                        )
+                    )
+            );
+
+<span class="fc" id="L130">        System.out.println(&quot;All commands built.&quot;);</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Getter method for ComamndManager's List of CommandData.
+     * @return the list of commands built by CommandManager.
+     */
+    public List&lt;CommandData&gt; getCommandDataList() {
+<span class="nc" id="L138">        return this.commandDataList;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

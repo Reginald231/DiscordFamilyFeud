@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DBManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DiscordFeud</a> &gt; <a href="index.source.html" class="el_package">com.github.reginald231</a> &gt; <span class="el_source">DBManager.java</span></div><h1>DBManager.java</h1><pre class="source lang-java linenums">package com.github.reginald231;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import java.sql.*;
+import java.util.HashMap;
+
+public class DBManager {
+    private Connection conn;
+    private Dotenv config;
+    private String DB_URL;
+    private String USER;
+    private String PASS;
+
+<span class="nc" id="L14">    public DBManager() {</span>
+        try {
+<span class="nc" id="L16">            this.DB_URL = config.get(&quot;DB_URL&quot;);</span>
+<span class="nc" id="L17">            this.USER = config.get(&quot;DB_USER&quot;);</span>
+<span class="nc" id="L18">            this.PASS = config.get(&quot;DB_PASS&quot;);</span>
+<span class="nc" id="L19">            Connection conn = DriverManager.getConnection(</span>
+                this.DB_URL,
+                this.USER,
+                this.PASS
+            );
+<span class="nc" id="L24">            this.conn = conn;</span>
+<span class="nc" id="L25">        } catch (SQLException e) {</span>
+<span class="nc" id="L26">            e.printStackTrace();</span>
+<span class="nc" id="L27">        }</span>
+<span class="nc" id="L28">    }</span>
+
+    public void start() {
+        try (
+<span class="nc" id="L32">            PreparedStatement stmt = this.conn.prepareStatement(</span>
+                    &quot;CREATE TABLE IF NOT EXISTS `LEADERBOARD`&quot; +
+                    &quot; ( `ID` INT NOT NULL ,&quot; +
+                    &quot; `TEAMNAME` VARCHAR(255) NOT NULL DEFAULT 'ANON' ,&quot; +
+                    &quot; `TEAMSIZE` INT NOT NULL DEFAULT '5' ,&quot; +
+                    &quot; `SCORE` INT NOT NULL &quot; +
+                    &quot;, `DATE` DATETIME NOT NULL  DEFAULT CURRENT_TIMESTAMP,&quot; +
+                    &quot; PRIMARY KEY (`ID`)) ENGINE = InnoDB;&quot;
+                )
+        ) {
+<span class="nc" id="L42">            ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc" id="L44">            System.out.println(&quot;Leaderboard created.&quot;);</span>
+<span class="nc" id="L45">            rs.close();</span>
+<span class="nc" id="L46">        } catch (Exception e) {</span>
+<span class="nc" id="L47">            e.printStackTrace();</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">    }</span>
+
+    public void closeConnection() {
+        try {
+<span class="nc" id="L53">            this.conn.close();</span>
+<span class="nc" id="L54">        } catch (SQLException se) {</span>
+<span class="nc" id="L55">            se.printStackTrace();</span>
+<span class="nc" id="L56">        }</span>
+<span class="nc" id="L57">    }</span>
+
+    private void enterScore(String teamName, int size, int score) {
+<span class="nc" id="L60">        String sql =</span>
+            &quot;INSERT INTO LEADERBOARD (TEAMNAME, TEAMSIZE, SCORE) VALUES (?,?,?)&quot;;
+
+<span class="nc" id="L63">        try (PreparedStatement ps = this.conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L64">            ps.setString(1, teamName);</span>
+<span class="nc" id="L65">            ps.setInt(2, size);</span>
+<span class="nc" id="L66">            ps.setInt(3, score);</span>
+
+<span class="nc" id="L68">            ResultSet rs = ps.executeQuery();</span>
+<span class="nc" id="L69">            rs.close();</span>
+<span class="nc" id="L70">        } catch (SQLException se) {</span>
+<span class="nc" id="L71">            se.printStackTrace();</span>
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">    }</span>
+
+    public HashMap getScores(String teamName, int limit) {
+<span class="nc" id="L76">        String sql =</span>
+            &quot;SELECT SCORE, DATE FROM LEADERBOARD WHERE TEAMNAME = ? &quot; +
+            &quot;ORDER BY DATE DESC &quot; +
+            &quot;LIMIT ?&quot;;
+
+<span class="nc" id="L81">        HashMap hm = new HashMap();</span>
+
+<span class="nc" id="L83">        try (PreparedStatement ps = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L84">            ps.setString(1, teamName);</span>
+<span class="nc" id="L85">            ps.setInt(2, limit);</span>
+
+<span class="nc" id="L87">            ResultSet rs = ps.executeQuery();</span>
+
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L90">                System.out.println(rs.next());</span>
+<span class="nc" id="L91">                hm.put(rs.getInt(&quot;SCORE&quot;), rs.getDate(&quot;DATE&quot;));</span>
+            }
+<span class="nc" id="L93">            System.out.println(hm);</span>
+<span class="nc" id="L94">            rs.close();</span>
+<span class="nc" id="L95">        } catch (SQLException se) {</span>
+<span class="nc" id="L96">            se.printStackTrace();</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">        return hm;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
