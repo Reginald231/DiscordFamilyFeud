@@ -22,3 +22,8 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+.env
+!/build/spotless/
+!/build/spotless-prettier-node-modules-6274374e72178db42d589e4394558e69/
+!/build/tmp/
