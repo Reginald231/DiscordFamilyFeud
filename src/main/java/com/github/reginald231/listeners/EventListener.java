@@ -132,7 +132,7 @@ public class EventListener extends ListenerAdapter {
       .queue();
 
     String roleList =
-      "The following roles have been created:\n%s\n%s\n%s".formatted(
+      "The following roles have been created:%n%s%n%s%n%s".formatted(
           teamRole1,
           teamRole2,
           hostRole
@@ -158,7 +158,7 @@ public class EventListener extends ListenerAdapter {
     Member host = event.getOption("host").getAsMember();
     Role hostRole = event.getOption("host_role").getAsRole();
 
-    String setupResults =
+    String setupResults = String.format(
       "Team Size:\t%d\n" +
       "Team A Name:\t%s\n" +
       "Team B Name:\t%s\n" +
@@ -166,17 +166,18 @@ public class EventListener extends ListenerAdapter {
       "Team B Role:\t%s\n" +
       "Team A Captain:\t%s\n" +
       "Team B Captain:\t%s\n" +
-      ("Host:\t%s\n" + "Host Role:\t%s").formatted(
-          teamSize,
-          team1Name,
-          team2Name,
-          team1Role,
-          team2Role,
-          teamACaptain,
-          teamBCaptain,
-          host,
-          hostRole
-        );
+      "Host:\t%s\n" +
+      "Host Role:\t%s",
+      teamSize,
+      team1Name,
+      team2Name,
+      team1Role,
+      team2Role,
+      teamACaptain,
+      teamBCaptain,
+      host,
+      hostRole
+    );
 
     this.fm.setTeam1Role(team1Role);
     this.fm.setTeam2Role(team2Role);
@@ -216,6 +217,7 @@ public class EventListener extends ListenerAdapter {
    * @return EmbedBuilder to respond to slash command event.
    */
   public EmbedBuilder getSupportEmbed() {
+    
     EmbedBuilder eb = new EmbedBuilder();
 
     eb.setTitle("Thank you for using the program. ♥\uFE0F", null);
