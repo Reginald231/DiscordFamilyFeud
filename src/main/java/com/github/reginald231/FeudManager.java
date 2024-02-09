@@ -189,6 +189,17 @@ public class FeudManager {
     return this.hostRole;
   }
 
+  public void setTeamCaptain(Role teamRole, Member p){
+    if(teamRole == this.team1Role){
+        this.team1Captain = p;
+    }
+
+    if(teamRole == this.team2Role){
+        this.team2Captain = p;
+  }
+
+}
+
   public void setTeam1Role(Role team1Role) {
     this.team1Role = team1Role;
   }
@@ -207,6 +218,7 @@ public class FeudManager {
     this.hostRole = hostRole;
   }
 
+  
   public void setHostRole(Role hostRole) {
     this.hostRole = hostRole;
   }

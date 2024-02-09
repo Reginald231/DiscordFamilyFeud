@@ -2,15 +2,22 @@ package com.github.Reginald231;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.reginald231.FeudManager;
 import com.github.reginald231.Player;
 import com.mysql.cj.jdbc.JdbcPropertySetImpl;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -23,6 +30,7 @@ import net.dv8tion.jda.internal.entities.GuildImpl;
 import net.dv8tion.jda.internal.entities.MemberImpl;
 import net.dv8tion.jda.internal.entities.RoleImpl;
 import net.dv8tion.jda.internal.entities.UserImpl;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -119,43 +127,96 @@ public class TestFeudManager {
   }
 
   @Test
-  void testGetConfig() {}
+  void testGetConfig() {
+    Dotenv config = fm.getConfig();
+    assertNotNull(config);
+  }
 
   @Test
-  void testGetHost() {}
+  void testGetHost() {
+    Member testHost = fm.getHost();
+    assertNotNull(testHost);
+  }
 
   @Test
-  void testGetHostRole() {}
+  void testGetHostRole() {
+    Role testHostRole = fm.getHostRole();
+    assertNotNull(testHostRole);
+  }
 
   @Test
-  void testGetShardManager() {}
+  void testGetShardManager() {
+     ShardManager sm = fm.getShardManager();
+     assertNotNull(sm);
+  }
 
   @Test
-  void testGetTeam1Captain() {}
+  void testGetTeam1Captain() {
+    fm.setTeamCaptain(TEAM_ROLE_1, MEMBER_1);
+    Member t1captain = fm.getTeam1Captain();
+    assertNotNull(t1captain);
+
+    assertTrue(t1captain == MEMBER_1);
+    assertTrue(TEAM_ROLE_1 == fm.getTeam1Role());
+  }
 
   @Test
-  void testGetTeam1List() {}
+  void testGetTeam1List() {
+    List<Player> team1List = fm.getTeam1List();
+    assertNotNull(team1List);
+  }
 
   @Test
-  void testGetTeam1Role() {}
+  void testGetTeam1Role() {
+    Role team1role = fm.getTeam1Role();
+    assertNotNull(team1role);
+  }
 
   @Test
-  void testGetTeam2Captain() {}
+  void testGetTeam2Captain() {
+    fm.setTeam2Role(TEAM_ROLE_2);
+    fm.setTeamCaptain(TEAM_ROLE_2, MEMBER_1);
+
+    Member team2Captain = fm.getTeam2Captain();
+    assertNotNull(team2Captain);
+  }
 
   @Test
-  void testGetTeam2List() {}
+  void testGetTeam2List() {
+    List<Player> team2List = fm.getTeam2List();
+    assertNotNull(team2List);
+    }
 
   @Test
-  void testGetTeam2Role() {}
+  void testGetTeam2Role() {
+    Role team2Role = fm.getTeam2Role();
+    assertNotNull(team2Role);
+  }
 
   @Test
-  void testGetTeamSize() {}
+  void testGetTeamSize() {
+    fm.setTeamSize(6);
+
+    int teamSize = fm.getTeamSize();
+    assertTrue(teamSize >= 0);
+  }
 
   @Test
-  void testRemoveHost() {}
+  void testRemoveHost() {
+    fm.setHost(MEMBER_1, HOST_ROLE);
+    assertNotNull(fm.getHost());
+
+    assertEquals(0, fm.removeHost());
+  }
 
   @Test
-  void testRemovePlayer() {} 
+  void testRemovePlayer() {
+    TEST_PLAYER_1.setUsername("Test User 1");
+    fm.addPlayer(TEST_PLAYER_1, TEAM_ROLE_1);
+    assertNotNull(fm.getTeam1List());
+
+    assertEquals(0, fm.removePlayer(TEST_PLAYER_1, TEAM_ROLE_1));
+  } 
 
   @Test
   @BeforeEach
